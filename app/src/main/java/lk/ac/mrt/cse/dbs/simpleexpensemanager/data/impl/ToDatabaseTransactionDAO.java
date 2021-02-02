@@ -23,13 +23,13 @@ public class ToDatabaseTransactionDAO extends SQLiteOpenHelper implements Transa
     //private final List<Transaction> transactions;
 
     public ToDatabaseTransactionDAO(@Nullable Context context) {
-        super(context, "SystemDB", null, 1);
+        super(context, "TransactionDB", null, 1);
     }
 
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create TABLE Transactions(date TEXT,accountNo TEXT, bankName TEXT NOT NULL, expenseType TEXT NOT NULL, amount REAL NOT NULL)");
+        db.execSQL("create TABLE Transactions(date TEXT,accountNo TEX, expenseType TEXT NOT NULL, amount REAL NOT NULL)");
     }
 
     @Override

@@ -25,7 +25,7 @@ public class ToDatabaseAccountDAO extends SQLiteOpenHelper implements AccountDAO
 
     public ToDatabaseAccountDAO(@Nullable Context context) {
 
-        super(context, "SystemDB", null, 1);
+        super(context, "AccountDB", null, 1);
     }
 
     @Override
@@ -135,33 +135,39 @@ public class ToDatabaseAccountDAO extends SQLiteOpenHelper implements AccountDAO
     public void updateBalance(String accountNo, ExpenseType expenseType, double amount) throws InvalidAccountException {
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor  = db.rawQuery("select * from Account where accountNo = ?",new String[] {accountNo});
+        Cursor cursor = db.rawQuery("select * from Account where accountNo = ?", new String[]{accountNo});
 
-        if(cursor.getCount()>0){
-            String bankName = cursor.getString(1);
-            String accountHolderName = cursor.getString(2);
-            double balance = cursor.getDouble(3);
+        if (cursor.moveToFirst()) {
 
-            Account account = new Account(accountNo,bankName,accountHolderName,balance);
+            do{
+                String accountNumber = cursor.getString(0);
+                String bankName = cursor.getString(1);
+                String accountHolderName = cursor.getString(2);
+                double balance = cursor.getDouble(0);
 
-            switch (expenseType) {
-                case EXPENSE:
-                    account.setBalance(account.getBalance() - amount);
-                    break;
-                case INCOME:
-                    account.setBalance(account.getBalance() + amount);
-                    break;
-            }
-            ContentValues cv = new ContentValues();
-            cv.put("bankName",account.getBankName());
-            cv.put("accountHolderName",account.getAccountHolderName());
-            cv.put("balance",account.getBalance());
+                Account account = new Account(accountNo, bankName, accountHolderName, balance);
 
-            long result = db.update("Account",cv,"accountNo=?",new String[] {accountNo});
+                switch (expenseType) {
+                    case EXPENSE:
+                        account.setBalance(account.getBalance() - amount);
+                        break;
+                    case INCOME:
+                        account.setBalance(account.getBalance() + amount);
+                        break;
+                }
+                ContentValues cv = new ContentValues();
+                cv.put("bankName", account.getBankName());
+                cv.put("accountHolderName", account.getAccountHolderName());
+                cv.put("balance", account.getBalance());
 
-        }else{
-            String msg = "Account " + accountNo + " is invalid.";
-            throw new InvalidAccountException(msg);
+                long result = db.update("Account", cv, "accountNo=?", new String[]{accountNo});
+
+
+            }while (cursor.moveToNext());
+
+        } else {
+//            String msg = "Account " + accountNo + " is invalid.";
+//            throw new InvalidAccountException(msg);
         }
     }
 

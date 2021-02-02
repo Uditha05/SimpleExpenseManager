@@ -66,9 +66,13 @@ public abstract class ExpenseManager implements Serializable {
         Date transactionDate = calendar.getTime();
 
         if (!amount.isEmpty()) {
+
             double amountVal = Double.parseDouble(amount);
             transactionsHolder.logTransaction(transactionDate, accountNo, expenseType, amountVal);
             accountsHolder.updateBalance(accountNo, expenseType, amountVal);
+
+
+
         }
     }
 

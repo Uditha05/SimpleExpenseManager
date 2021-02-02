@@ -28,6 +28,8 @@ public class PersistentExpenseManager extends ExpenseManager{
         AccountDAO toDatabaseAccountDAO = new ToDatabaseAccountDAO(context);
         setAccountsDAO(toDatabaseAccountDAO);
 
+
+
     }
 
 }
